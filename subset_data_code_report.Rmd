@@ -1,0 +1,126 @@
+---
+title: "subset_HP"
+author: "anna kvach"
+date: "1/16/2021"
+output: html_document
+---
+# Intoduction to data
+
+## colnames
+```{r}
+colnames(t)
+```
+
+### ID
+```{r}
+head(t$Dedication, 5)
+```
+
+### Title
+```{r}
+head(t$Title, 5)
+```
+
+### Likes
+```{r}
+head(t$Likes, 5)
+```
+
+### Collections
+```{r}
+head(t$Collections, 5)
+```
+
+### Rewats
+```{r}
+head(t$Rewards, 5)
+```
+
+### Comments
+```{r}
+head(t$Comments, 5)
+```
+
+### Authors
+```{r}
+head(t$authors, 5)
+```
+
+### Genre
+```{r}
+head(t$Genre, 5)
+```
+
+### Authors
+```{r}
+head(t$Authors, 5)
+```
+
+### Fandom
+```{r}
+head(t$Fandom, 5)
+```
+
+### Pairings
+```{r}
+head(t$Pairings, 5)
+```
+
+### Characters
+```{r}
+head(t$Characters, 5)
+```
+### Rating
+```{r}
+head(t$Rating, 5)
+```
+
+### Size
+```{r}
+head(t$Size, 5)
+```
+### Status
+```{r}
+head(t$Status, 5)
+```
+
+### Tags
+```{r}
+head(t$Tags, 5)
+```
+
+### Description
+```{r}
+head(t$Description, 5)
+```
+
+### Dedication
+```{r}
+head(t$Dedication, 5)
+```
+
+### Publish.permissions
+```{r}
+head(t$Publish.permissions, 5)
+```
+
+### Author.note
+```{r}
+head(t$Author.note, 5)
+```
+
+### Contents
+```{r}
+head(t$Contents, 5)
+```
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,177 @@
+---
+title: "json_analise"
+author: "anna kvach"
+date: "1/16/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+<https://blog.exploratory.io/working-with-json-data-in-very-simple-way-ad7ebcc0bb89> as manual 
+
+------------------------------------
+
+# Prepare packages
+
+## Install packages
+
+For package installation we used function from - <https://stackoverflow.com/a/31620488>. 
+
+It will check for missing packages and install them + it will query both - CRAN and Bioconductor repositories for missing package.
+
+
+```{r}
+
+install.packages.auto <- function(x) { 
+  x <- as.character(substitute(x)) 
+  if(isTRUE(x %in% .packages(all.available=TRUE))) { 
+    eval(parse(text = sprintf("require(\"%s\")", x)))
+  } else { 
+    #update.packages(ask= FALSE) #update installed packages.
+    eval(parse(text = sprintf("install.packages(\"%s\", dependencies = TRUE)", x)))
+  }
+  if(isTRUE(x %in% .packages(all.available=TRUE))) { 
+    eval(parse(text = sprintf("require(\"%s\")", x)))
+  } else {
+    source("http://bioconductor.org/biocLite.R")
+    #biocLite(character(), ask=FALSE) #update installed packages.
+    eval(parse(text = sprintf("biocLite(\"%s\")", x)))
+    eval(parse(text = sprintf("require(\"%s\")", x)))
+  }
+}
+
+```
+
+```{r}
+install.packages.auto("jsonlite")
+install.packages.auto("tibble")
+install.packages.auto("dplyr")
+install.packages.auto("stringr")
+install.packages.auto("tidyr")
+```
+
+## Library packages
+
+```{r}
+library(jsonlite)
+library(tibble)
+library(dplyr)
+library(stringr)
+library(tidyr)
+```
+
+## Import data
+
+```{r}
+yelp <- stream_in(file("/home/anna/hacaton_2021_potter/hacaton_hp/test_data/yelp_academic_dataset_business.json"))
+```
+
+### raw_data
+
+#### str
+
+```{r}
+str(yelp)
+```
+
+
+#### view raw_data
+
+```{r}
+yelp
+```
+
+## flatten
+
+Number of columns will increase. From hierarchia to wide format
+
+### str flatten
+```{r}
+yelp_flat <- flatten(yelp)
+str(yelp_flat)
+```
+
+
+### view flatten
+
+```{r}
+yelp_flat
+```
+
+
+
+## as_data_frame
+
+```{r}
+yelp_tbl <- as_data_frame(yelp_flat)
+yelp_tbl
+```
+# to show data in list
+
+```{r}
+yelp_tbl %>% mutate(categories = as.character(categories)) %>% select(categories)
+```
+
+
+# remove cols srats with
+
+```{r}
+yelp_tbl %>% 
+ select(-starts_with("hours"), -starts_with("attribute"))
+```
+
+# to choose _Mini Golf_ from _categories_
+
+```{r}
+yelp_tbl %>% select(-starts_with("hours"), -starts_with("attribute")) %>%
+ filter(str_detect(categories, "Mini Golf"))
+```
+
+## to test 
+
+```{r}
+yelp_tbl %>% select(-starts_with("hours"), -starts_with("attribute")) %>%
+ filter(str_detect(categories, "Mini Golf")) %>%
+ mutate(categories = as.character(categories)) %>% select(categories)
+```
+
+
+# to unnest
+
+```{r}
+yelp_tbl %>% select(-starts_with("hours"), -starts_with("attribute")) %>%
+ filter(str_detect(categories, "Mini Golf")) %>%
+ unnest(categories) %>%
+ select(name, categories)
+```
+
+
+# to count
+
+```{r}
+yelp_tbl %>% select(-starts_with("hours"), -starts_with("attribute")) %>%
+ filter(str_detect(categories, "Mini Golf")) %>%
+ unnest(categories) %>%
+ select(name, categories) %>%
+ count(categories)
+```
+
+
+# to arrange
+
+```{r}
+yelp_tbl %>% select(-starts_with("hours"), -starts_with("attribute")) %>%
+ filter(str_detect(categories, "Mini Golf")) %>%
+ unnest(categories) %>%
+ select(name, categories) %>%
+ count(categories) %>%
+ arrange(desc(n))
+```
+
+
+
+
+
+
+
+
