@@ -146,6 +146,112 @@ names_of_Characters <- rd %>%
 names_of_Characters
 ```
 
+```{r}
+all_ch_names <- names_of_Characters$name
+
+length(all_ch_names)
+
+length(unique(all_ch_names))
+
+ch_names <- unique(all_ch_names)
+
+head(sort(ch_names), 100)
+
+
+```
+```{r}
+genre_data <- as.data.frame(table(all_ch_names))
+
+sort_genre_data <- subset(genre_data, Freq > 100)
+
+sort_genre_data
+genre_data
+```
+```{r}
+ggplot(genre_data, aes(x=Freq)) + geom_histogram(bins = 70, color="darkblue", fill="lightblue") +
+  theme_minimal()+theme(legend.position="top") +
+labs(title="Characters histogram plot",x = "Characters", y = "Density")
+```
+reorder(day, -perc)
+
+```{r}
+# Barplot
+ggplot(sort_genre_data, aes(x = reorder(all_ch_names, -Freq), y = Freq)) + 
+  geom_bar(stat = "identity", color="darkblue", fill="lightblue") +
+  coord_flip() +
+  labs(title="Characters top 100", x = "Characters", y = "Density") +
+  theme_minimal()+theme(legend.position="top") 
+```
+
+# to show dates
+
+```{r}
+head(rd$Dates.published)
+```
+
+# pairing
+
+c("Гермиона Грейнджер", "Панси Паркинсон")
+
+```{r}
+rd %>% mutate(Pairings = as.character(Pairings)) %>% select(Pairings) 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
