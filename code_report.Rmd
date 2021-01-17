@@ -90,230 +90,31 @@ Put in file_name path to the data.
 
 It is will be better to have empty R-environment before jsonlite::stream_in()
 
-```{r}
 file_name <- '/home/anna/hacaton_2021_potter/hacaton_hp/data/FicBook_Metadata_full.json'
 rd <- jsonlite::stream_in(textConnection(readLines(file_name)), verbose=F)
 
-```
-# Intoduction to data
 
-## colnames
+```{r}
+
+file_name <- '/home/anna/hacaton_2021_potter/hacaton_hp/data/FanFics_Metadata_full.json'
+rd <- jsonlite::stream_in(textConnection(readLines(file_name)), verbose=F)
+```
+
+# delete cols
+
+```{r}
+rd$ID <- NULL
+rd$Authors <- NULL
+rd$Series <- NULL
+rd$Thanks <- NULL
+rd$Author.note <- NULL
+rd$Contents <- NULL
+```
+
 ```{r}
 colnames(rd)
 ```
 
-### ID
-```{r}
-head(rd$Dedication, 5)
-```
-
-### Title
-```{r}
-head(rd$Title, 5)
-```
-
-### Likes
-```{r}
-head(rd$Likes, 5)
-
-summary(rd$Likes)
-```
-
-### Collections
-```{r}
-head(rd$Collections, 5)
-
-summary(rd$Collections)
-```
-
-### Rewards
-```{r}
-head(rd$Rewards, 5)
-```
-
-```{r}
-rd %>% mutate(Rewards = as.character(Rewards)) %>% select(Rewards)
-```
-
-```{r}
-rewards[10,]
-```
-
-
-
-### Comments
-```{r}
-head(rd$Comments, 5)
-
-summary(rd$Comments)
-```
-
-### Authors
-```{r}
-head(rd$Authors, 5)
-```
-
-### Genre
-```{r}
-head(rd$Genre, 5)
-
-unique(rd$Genre)
-
-```
-
-```{r}
-# Create data
-genre_data <- as.data.frame(table(rd$Genre))
-genre_data$Freq
-# "article" "femslash" "gen" "het" "mixed" "other" "slash"
-
-# treemap
-treemap(dtf = genre_data, index = "Var1", vSize = "Freq", type = "index",                           
-    palette = "Set3", # Select your color palette from the RColorBrewer presets or make your own.
-    title = "My Treemap", # Customize your title
-    fontsize.title = 12) # Size of the title
-
-# Create data
-genre_data_2 <- data.frame(genre = c("Art", "Oth", "Gen", "Femslash",  "Het", "Mix", "Slash"), freq = c(581,  389,  28521, 1063, 32820,  4916,    20453))
-
-# treemap
-treemap(dtf = genre_data_2, index = "genre", vSize = "freq", type = "index",                           
-    palette = "Paired", # Select your color palette from the RColorBrewer presets or make your own.
-    title = "My Treemap", # Customize your title
-    fontsize.title = 10) # Size of the title
-
-
-subgroup <- paste("subgroup" , c(1,2,3,4,1,2,1,2,3), sep="-")
-
-# Build Dataset
-group <- c(rep("No relationships", 3), "Femslash", rep("With relationships", 3))
-subgroup <- c("Art", "Oth", "Gen", "Fem",  "Het", "Mix", "Slash")
-value <- c(581,  389,  28521, 1063, 32820, 4916, 20453)
-data <- data.frame(group, subgroup, value)
- 
-
-# treemap
-treemap(data, 
-        index=c("group","subgroup"),
-        vSize="value",
-        type="index",
-          
-        title = "Genre", # Customize your title
-        fontsize.title = 15) # Size of the title) 
-
-```
-
-```{r}
-# Build Dataset
-group <- c(rep("No relationships", 3), "Femslash", rep("With relationships", 3))
-subgroup <- c("Art", "Oth", "Gen", "Fem",  "Het", "Mix", "Slash")
-value <- c(581,  389,  28521, 1063, 32820, 4916, 20453)
-data <- data.frame(group, subgroup, value)
-data$pct <- data$value / sum(data$value) 
-label_percent()(data$pct) # "Art 0.65%", "Oth 0.44%", "Gen 32.14%", "Fem 1.20%",  "Het 36.98%", "Mix 5.54%", "Slash 23.05%"
- 
-
-# treemap
-ggplot(data,
-       aes(area = value, 
-           fill = group, 
-           label = subgroup,
-           subgroup = subgroup)) +
-
-  geom_treemap() +
-  geom_treemap_text() +
-  labs(title = "Genre") + 
-  scale_colour_colorblind()
-```
-
-
-### Authors
-```{r}
-head(rd$Authors, 5)
-```
-
-### Fandom
-```{r}
-head(rd$Fandom, 5)
-```
-
-### Pairings
-```{r}
-head(rd$Pairings, 5)
-```
-
-### Characters
-```{r}
-head(rd$Characters, 5)
-```
-
-```{r}
- rd %>% mutate(Characters = as.character(Characters)) %>% select(Characters)
-
-```
-
-```{r}
-characters
-```
-
-character(0)
-
-c("Артур Уизли", "Люциус Малфой")
-
-Секрет
-
-Гермиона Грейнджер
-
-
-
-
-
-### Rating
-```{r}
-head(rd$Rating, 5)
-```
-
-### Size
-```{r}
-head(rd$Size, 5)
-```
-### Status
-```{r}
-head(rd$Status, 5)
-```
-
-### Tags
-```{r}
-head(rd$Tags, 5)
-```
-
-### Description
-```{r}
-head(rd$Description, 5)
-```
-
-### Dedication
-```{r}
-head(rd$Dedication, 5)
-```
-
-### Publish.permissions
-```{r}
-head(rd$Publish.permissions, 5)
-```
-
-### Author.note
-```{r}
-head(rd$Author.note, 5)
-```
-
-### Contents
-```{r}
-head(rd$Contents, 5)
-```
-
-============================
-============================
 
 ### str flatten
 ```{r}
@@ -322,10 +123,28 @@ str(rd)
 ```
 
 
+## as_data_frame
 
+```{r}
+rd <- as_data_frame(rd)
+rd
+```
 
+# to show "Гарри Поттер" in Characters
 
+```{r}
+rd %>% mutate(Characters = as.character(Characters)) %>% select(Characters) %>%
+ filter(str_detect(Characters, "Гарри Поттер"))
+```
+# to unnest
 
+```{r}
+names_of_Characters <- rd %>%
+ unnest(Characters) %>%
+ select(name)
+
+names_of_Characters
+```
 
 
 
